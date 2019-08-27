@@ -62,7 +62,9 @@ namespace DaeSaat
 
                 if (Saat.Örnek.Configuration.Instance.Analog)
                 {
-                    for (var id = Saat.Örnek.Configuration.Instance.AnalogSaatEfektIdsi; id <= 16052; id++)
+                    var sonYelkovanEfektIdsi = Saat.Örnek.Configuration.Instance.YelkovanEfektIdBaşlangıcı + 59;
+
+                    for (var id = Saat.Örnek.Configuration.Instance.AnalogSaatEfektIdsi; id <= sonYelkovanEfektIdsi; id++)
                     {
                         EffectManager.askEffectClearByID(id, oyuncu.CSteamID);
                     }
