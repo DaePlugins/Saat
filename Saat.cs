@@ -5,14 +5,14 @@ using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
-using Harmony;
+using HarmonyLib;
 
 namespace DaeSaat
 {
     public class Saat : RocketPlugin<SaatYapılandırma>
     {
         public static Saat Örnek { get; private set; }
-        private HarmonyInstance _harmony;
+        private Harmony _harmony;
 
         private string _ayıraç;
 
@@ -24,8 +24,8 @@ namespace DaeSaat
         {
             Örnek = this;
 
-            _harmony = HarmonyInstance.Create("dae.saat");
-            _harmony.PatchAll(Assembly.GetExecutingAssembly());
+            _harmony = new Harmony("dae.saat");
+            _harmony.PatchAll();
 
             AyıraçVar = true;
 
