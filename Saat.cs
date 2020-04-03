@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using Rocket.API.Collections;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
@@ -33,13 +33,8 @@ namespace DaeSaat
 
             if (Configuration.Instance.Analog)
             {
-                foreach (var steamOyuncu in Provider.clients)
+                foreach (var steamOyuncu in Provider.clients.Where(s => !ArayüzEfektiniAlmayacaklar.Contains(s.playerID.steamID.m_SteamID)))
                 {
-                    if (ArayüzEfektiniAlmayacaklar.Contains(steamOyuncu.playerID.steamID.m_SteamID))
-                    {
-                        continue;
-                    }
-
                     EffectManager.sendUIEffect(Configuration.Instance.AnalogSaatEfektIdsi, 15980, steamOyuncu.playerID.steamID, true);
                 }
             }
@@ -58,7 +53,7 @@ namespace DaeSaat
             {
                 if (Configuration.Instance.Analog)
                 {
-                    var sonYelkovanEfektIdsi = Saat.Örnek.Configuration.Instance.YelkovanEfektIdBaşlangıcı + 59;
+                    var sonYelkovanEfektIdsi = Configuration.Instance.YelkovanEfektIdBaşlangıcı + 59;
 
                     for (var id = Configuration.Instance.AnalogSaatEfektIdsi; id <= sonYelkovanEfektIdsi; id++)
                     {
@@ -100,7 +95,7 @@ namespace DaeSaat
             var saatBaşınaBirim = (decimal)LightingManager.cycle / 24;
             var dakikaBaşınaBirim = (decimal)LightingManager.cycle / 1440;
 
-            return (uint)((saat + 19) % 24 * saatBaşınaBirim + dakika * dakikaBaşınaBirim + 101);
+            return (uint)((saat % 24 + 19) % 24 * saatBaşınaBirim + dakika % 60 * dakikaBaşınaBirim + 101);
         }
         
         public void EfektleriGönder()
@@ -117,30 +112,16 @@ namespace DaeSaat
                 var akrepIdsi = (ushort)(Configuration.Instance.AkrepEfektIdBaşlangıcı + zaman.Key % 12);
                 var yelkovanIdsi = (ushort)(Configuration.Instance.YelkovanEfektIdBaşlangıcı + zaman.Value);
 
-                foreach (var steamOyuncu in Provider.clients)
+                foreach (var steamId in Provider.clients.Select(s => s.playerID.steamID).Where(s => !ArayüzEfektiniAlmayacaklar.Contains(s.m_SteamID)))
                 {
-                    var steamId = steamOyuncu.playerID.steamID;
-
-                    if (ArayüzEfektiniAlmayacaklar.Contains(steamId.m_SteamID))
-                    {
-                        continue;
-                    }
-
                     EffectManager.sendUIEffect(akrepIdsi, 15981, steamId, true);
                     EffectManager.sendUIEffect(yelkovanIdsi, 15993, steamId, true);
                 }
             }
             else
             {
-                foreach (var steamOyuncu in Provider.clients)
+                foreach (var steamId in Provider.clients.Select(s => s.playerID.steamID).Where(s => !ArayüzEfektiniAlmayacaklar.Contains(s.m_SteamID)))
                 {
-                    var steamId = steamOyuncu.playerID.steamID;
-
-                    if (ArayüzEfektiniAlmayacaklar.Contains(steamId.m_SteamID))
-                    {
-                        continue;
-                    }
-
                     EffectManager.sendUIEffect(Configuration.Instance.DijitalSaatEfektIdsi, 15979, steamId, true,
                         $"<color=#{Configuration.Instance.SaatRengi}>{zaman.Key:00}</color>{(AyıraçVar ? _ayıraç : " ")}<color=#{Configuration.Instance.DakikaRengi}>{zaman.Value:00}</color>");
                 }
