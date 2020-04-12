@@ -11,7 +11,7 @@ namespace DaeSaat
 
         public bool Analog { get; set; }
 
-        public char Ayıraç { get; set; }
+        public string Ayıraç { get; set; }
         public bool AyıraçYanıpSönsün { get; set; }
         public double AyıraçYanıpSönmeAralığı { get; set; }
 
@@ -28,7 +28,7 @@ namespace DaeSaat
 
             Analog = true;
 
-            Ayıraç = '.';
+            Ayıraç = ".";
             AyıraçYanıpSönsün = true;
             AyıraçYanıpSönmeAralığı = 0.75d;
 
